@@ -1,92 +1,88 @@
 
-let apiURL =  `https://api.openweathermap.org/data/2.5/weather?apikey=c93f60dd39d984124ac32ea0beaa7de5&zip=`
-/*let apiKey = "c93f60dd39d984124ac32ea0beaa7de5";*/
+/* Global Variables */
+const form = document.querySelector('.app__form');
+//const icons = document.querySelectorAll('.entry__icon');
 
-let myDate = new Date();
-let newDate = myDate.getMonth()+'.'+ myDate.getDate()+'.'+ myDate.getFullYear();
+// Base URL and API Key for OpenWeatherMap API
+const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
+const apiKey = '&appid=c93f60dd39d984124ac32ea0beaa7de5';
 
-// Event listener 
+//Get the date
+let d = new Date();
+let newDate = d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
+
+// Event listener to add function to existing HTML DOM element
 document.getElementById('generate').addEventListener('click', performAction);
 
-/* Function */
-function performAction(e){
-  
-    const newZip=  document.getElementById('zipcode').value;
-  console.log('newzip:'+ newZip);
-    const feelings=document.getElementById('feelings').value;
-    console.log('you feel:'+feelings);
-    //----------------------------------------------
-    getWeather(apiURL, newZip)
-    .then(function(data){
-      console.log(data);
-        postData('/addWeather', { temp:data.main.temp, date:newDate,feelings:feelings ,city:data.name});
-        console.log('City :'+data.name);
-    })
-       .then(
-        updateUI()
-      )
-    }
-   // ------get the url with the user zip--------------------------
-    const getWeather = async (apiURL, zip)=>{
-      const res = await fetch(apiURL+zip)
-      try {
-      const data = await res.json();
-        return data;
-      }  catch(error) {
-        console.log("error", error);
-      }
-    }
-   
-//  POST
-const postData = async ( url = "", data = {} )=>{
-  
-    const response = await fetch(url, {
-    method: 'POST',
-    credentials: 'same-origin', 
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),   
-  });
+/* Function called by event listener */
+function performAction(e) {
+  e.preventDefault();
+  // get user input values
+  const newZip = document.getElementById('zip').value;
+  const content = document.getElementById('feelings').value;
 
-    try {
-      const newData = await response.json();
-      console.log(newData);
-      return newData
-    }catch(error) {
-    console.log("error", error);
-   
-    }
+  getWeather(baseURL, newZip, apiKey)
+    .then(function (userData) {
+      // add data to POST request
+      postData('/addWeather', { date: newDate, temp: userData.main.temp, content })
+    }).then(function (newData) {
+      // call updateUI to update browser content
+      updateUI()
+    })
+  // reset form
+  //form.reset();
 }
 
-// GET
-const getData = async (url='') =>{ 
-  const request = await fetch(url);
+/* Function to GET Web API Data*/
+const getWeather = async (baseURL, newZip, apiKey) => {
+  // res equals to the result of fetch function
+  const res = await fetch(baseURL + newZip + apiKey);
   try {
-  // Transform into JSON
-  const Data = await request.json()
-  return data;
-  }
-  catch(error) {
+    // userData equals to the result of fetch function
+    const userData = await res.json();
+    return userData;
+  } catch (error) {
     console.log("error", error);
-    
+  }
+}
+
+/* Function to POST data */
+const postData = async (url = '', data = {}) => {
+  const req = await fetch(url, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8"
+    },
+    body: JSON.stringify({
+      date: data.date,
+      temp: data.temp,
+      content: data.content
+    })
+  })
+
+  try {
+    const newData = await req.json();
+    return newData;
+  }
+  catch (error) {
+    console.log(error);
   }
 };
 
-//Update UI
+
 const updateUI = async () => {
-    const request = await fetch('/all');
-    try{
-      const allData = await request.json();
-      const c =allData[0].temp-273;
-      var num = c.toFixed(2);
-      console.log("Temp in c:"+num);
-      document.getElementById('date').innerHTML = " Today is "+allData[0].date;
-      document.getElementById('city').innerHTML = " in "+allData[0].city;
-      document.getElementById('temp').innerHTML = " The tempreture is "+(num)+' °C';
-      document.getElementById('content').innerHTML = " and you feel: "+allData[0].feelings;
-  
-    }catch(error){
-      console.log("error", error);
-    }
-}
+  const request = await fetch('/all');
+  try {
+    const allData = await request.json()
+    // show icons on the page
+//    icons.forEach(icon => icon.style.opacity = '1');
+    // update new entry values
+    document.getElementById('date').innerHTML = allData.date;
+    document.getElementById('temp').innerHTML = allData.temp;
+    document.getElementById('content').innerHTML = allData.content;
+  }
+  catch (error) {
+    console.log("error", error);
+  }
+};
