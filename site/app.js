@@ -1,15 +1,14 @@
 
 /* Global Variables */
 const form = document.querySelector('.app__form');
-//const icons = document.querySelectorAll('.entry__icon');
-
 // Base URL and API Key for OpenWeatherMap API
-const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
+const baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip=';
 const apiKey = '&appid=c93f60dd39d984124ac32ea0beaa7de5';
 
 //Get the date
 let d = new Date();
-let newDate = d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
+let newDate = d.getMonth() + 1 + '-' + d.getDate() + '-' + d.getFullYear();
+//let newDate = d.format("{Month:2}-{Date:2}-{FullYear}"); // mm-dd-yyyy
 
 // Event listener to add function to existing HTML DOM element
 document.getElementById('generate').addEventListener('click', performAction);
@@ -18,29 +17,30 @@ document.getElementById('generate').addEventListener('click', performAction);
 function performAction(e) {
   e.preventDefault();
   // get user input values
+  
   const newZip = document.getElementById('zip').value;
-  const content = document.getElementById('feelings').value;
+  const contentText = document.getElementById('feelings').value;
 
   getWeather(baseURL, newZip, apiKey)
-    .then(function (userData) {
+    .then(function (data) {
+      console.log(data);
       // add data to POST request
-      postData('/addWeather', { date: newDate, temp: userData.main.temp, content })
-    }).then(function (newData) {
+      postData('/addWeather', { date: newDate, temp: data.main.temp, content:contentText, city: data.name})
+    }).then(
       // call updateUI to update browser content
       updateUI()
-    })
+    )
   // reset form
   //form.reset();
 }
 
 /* Function to GET Web API Data*/
 const getWeather = async (baseURL, newZip, apiKey) => {
-  // res equals to the result of fetch function
   const res = await fetch(baseURL + newZip + apiKey);
   try {
     // userData equals to the result of fetch function
-    const userData = await res.json();
-    return userData;
+    const data = await res.json();
+    return data;
   } catch (error) {
     console.log("error", error);
   }
@@ -48,21 +48,20 @@ const getWeather = async (baseURL, newZip, apiKey) => {
 
 /* Function to POST data */
 const postData = async (url = '', data = {}) => {
-  const req = await fetch(url, {
+  console.log("postdata function: " + data);
+
+  const response = await fetch(url, {
     method: "POST",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json;charset=UTF-8"
     },
-    body: JSON.stringify({
-      date: data.date,
-      temp: data.temp,
-      content: data.content
-    })
-  })
+    body: JSON.stringify(data)
+  });
 
   try {
-    const newData = await req.json();
+    const newData = await response.json();
+    console.log(newData);
     return newData;
   }
   catch (error) {
@@ -75,14 +74,15 @@ const updateUI = async () => {
   const request = await fetch('/all');
   try {
     const allData = await request.json()
-    // show icons on the page
-//    icons.forEach(icon => icon.style.opacity = '1');
+    
     // update new entry values
-    document.getElementById('date').innerHTML = allData.date;
-    document.getElementById('temp').innerHTML = allData.temp;
-    document.getElementById('content').innerHTML = allData.content;
+    document.getElementById('date').innerHTML = `Date: ${allData[0].date}`; // allData[0].date;
+    document.getElementById('temp').innerHTML = `Temp: ${allData[0].temp}`;
+    document.getElementById('content').innerHTML = `I feel: ${allData[0].content}`;
+    document.getElementById('city').innerHTML = `City: ${allData[0].city}`;
   }
   catch (error) {
     console.log("error", error);
   }
 };
+
