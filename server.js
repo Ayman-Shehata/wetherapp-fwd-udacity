@@ -18,7 +18,7 @@ app.use(cors());
 //main folder
 app.use(express.static('site'));
 //port
-const port = 3000;
+const port = 4500;
 //server
 const server = app.listen(port, listening);
 //listen
@@ -30,7 +30,8 @@ let projectData =[];
 app.get('/all',sendData);
 function sendData(req,res){
     res.send(projectData);
-    projectData=[];
+    console.log(projectData);
+    
 }
 
 app.post('/addWeather', addWeather);

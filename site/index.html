@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css2.css">
+    <link rel="stylesheet" href="style.css">
     <title>Weather Journal app </title>
     <link rel="shortcut icon" href="#">
 </head>
@@ -16,39 +16,29 @@
     <img src="wether.png" alt="Avatar" class="avatar">
   </div>
 
-
-
-
   <div class="container">
     <label for="zipcode"><b>Zip code</b></label>
     <input type="text" placeholder="Enter zip code" name="zipcode" required id="zip">
     
     <label for="feelings"><b>Your feeling</b></label>
-    <input type="text" placeholder="Enter your feelings" name="feelings" id="feelings" required>
+    <textarea placeholder="Enter your feelings" name="feelings" id="feelings" required ></textarea>
         
     <button id="generate" type = "submit"> Generate </button>
      
   </div>
   <div class="container" style="background-color:#f1f1f1">
-     
   </div>
 
 
-<div class="column" style="border: 1px solid #ccc;">
-   
-    <div id="date"></div>
-    <div id="city"></div>
-   <div id="temp"></div>
-   <div id = "content"></div> 
-   
+<div id="entryHolder" style="border: 1px solid #ccc;">
+  <div id="result"></div>
+  <div id="date"></div>  
+  <div id="temp"></div>
+  <div id="content"></div>
+  <div id = "city"></div> 
+  
 </div>
 
-
-
-
-
-  
- 
        <script src="app.js" type="text/javascript"></script>
 
 </body>
