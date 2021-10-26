@@ -18,9 +18,10 @@ A project description section.
 ## A credits section.
 
 
-* index.html
-* style.css
-* 
+* site
+    * index.html
+    * style.css
+    * app.js
+    * wether.png
 * Readme.md
 * server.js
-* app.js
