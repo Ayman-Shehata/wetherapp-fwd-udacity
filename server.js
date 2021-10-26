@@ -7,11 +7,11 @@ const bodyParser = require('body-parser')
 //use
 //app.use(express.urlencoded({ extended: true }))
 
-//app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json())  
+//app.use(express.urlencoded({extended: true}));
+//app.use(express.json())  
 //cors
 const cors = require('cors');
 app.use(cors());
