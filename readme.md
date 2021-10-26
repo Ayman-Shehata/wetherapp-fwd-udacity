@@ -1,5 +1,5 @@
 
-![preview](https://github.com/[Ayman-shehata]/[wetherapp-fwd-udacity]/blob/[master]/2021-10-26_163345.png?raw=true)
+![preview](https://github.com/Ayman-Shehata/wetherapp-fwd-udacity/blob/master/2021-10-26_163345.png?raw=true)
 
 # weather-journal-app
 
