@@ -19,8 +19,8 @@ function clickAction(e) {
       postData('/addWeather', { date: newDate, temp: data.main.temp, content:contentText, city: data.name})
     }).then(
       
-      updateUI()
-    )
+      ()=> updateUI()
+    );
 }
 
 const getWeather = async (baseURL, newZip, apiKey) => {
